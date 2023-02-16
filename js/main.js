@@ -10,6 +10,7 @@ const buttonCancelForm = document.querySelector('.js-btn-cancel');
 const inputDesc = document.querySelector('.js-input-desc');
 const inputPhoto = document.querySelector('.js-input-photo');
 const inputName = document.querySelector('.js-input-name');
+const inputRace = document.querySelector('.js-input-race');
 const linkNewFormElememt = document.querySelector('.js-button-new-form');
 const labelMessageError = document.querySelector('.js-label-error');
 const input_search_desc = document.querySelector('.js_in_search_desc');
@@ -57,6 +58,7 @@ function renderKitten(kittenData) {
 }
 
 function renderKittenList(kittenDataList) {
+    console.log(kittenDataList);
     listElement.innerHTML = "";
     for (const kittenItem of kittenDataList) {
         listElement.innerHTML += renderKitten(kittenItem);
@@ -79,19 +81,38 @@ function handleClickNewCatForm(event) {
         hideNewCatForm();
     }
 }
+    const newKittenDataObject = 
+    {
+    valueDesc:'pepito',
+    valuePhoto:'',
+    valueName:'',
+    valueRace:'',
+  //completa el código
+    };
 //Adicionar nuevo gatito
 function addNewKitten(event) {
+    console.log('entro en addNewKitten');
     event.preventDefault();
-    const valueDesc = inputDesc.value;
-    const valuePhoto = inputPhoto.value;
-    const valueName = inputName.value;
-    if (valueDesc === "" && valuePhoto === "" && valueName === "") {
+
+
+    // newKittenDataObject.valueDesc = inputDesc.value;
+
+    newKittenDataObject.valuePhoto = inputPhoto.value;
+    newKittenDataObject.valueName = inputName.value;
+    newKittenDataObject.valueRace = inputRace.value;
+
+    kittenDataList.push(newKittenDataObject);
+    console.log(kittenDataList);
+    if (newKittenDataObject.valueDesc === "" && newKittenDataObject.valuePhoto === "" && newKittenDataObject.valueName === "") 
+    {
         labelMessageError.innerHTML = "¡Uy! parece que has olvidado algo";
-    } else {
-        if (valueDesc !== "" && valuePhoto !== "" && valueName !== "") {
+    } else 
+    {
+        if (newKittenDataObject.valueDesc !== "" && newKittenDataObject.valuePhoto !== "" && newKittenDataObject.valueName !== "") {
             labelMessageError.innerHTML = "";
         }
     }
+    renderKittenList(kittenDataList);
 }
 //Cancelar la búsqueda de un gatito
 function cancelNewKitten(event) {
