@@ -1,6 +1,5 @@
 'use strict';
 
-
 /* Elementos que usamos en el HTML */
 const newFormElement = document.querySelector('.js-new-form');
 const listElement = document.querySelector('.js-list');
@@ -14,6 +13,7 @@ const inputRace = document.querySelector('.js-input-race');
 const linkNewFormElememt = document.querySelector('.js-button-new-form');
 const labelMessageError = document.querySelector('.js-label-error');
 const input_search_desc = document.querySelector('.js_in_search_desc');
+const input_search_race = document.querySelector('.js_in_search_race');
 
 
 //Objetos con cada gatito
@@ -83,10 +83,10 @@ function handleClickNewCatForm(event) {
 }
     const newKittenDataObject = 
     {
-    valueDesc:'pepito',
-    valuePhoto:'',
-    valueName:'',
-    valueRace:'',
+    desc:'',
+    image:'',
+    name:'',
+    race:'',
   //completa el código
     };
 //Adicionar nuevo gatito
@@ -94,25 +94,27 @@ function addNewKitten(event) {
     console.log('entro en addNewKitten');
     event.preventDefault();
 
-
-    // newKittenDataObject.valueDesc = inputDesc.value;
-
-    newKittenDataObject.valuePhoto = inputPhoto.value;
-    newKittenDataObject.valueName = inputName.value;
-    newKittenDataObject.valueRace = inputRace.value;
+    newKittenDataObject.desc = inputDesc.value;
+    newKittenDataObject.image = inputPhoto.value;
+    newKittenDataObject.name = inputName.value;
+    newKittenDataObject.race = inputRace.value;
 
     kittenDataList.push(newKittenDataObject);
     console.log(kittenDataList);
-    if (newKittenDataObject.valueDesc === "" && newKittenDataObject.valuePhoto === "" && newKittenDataObject.valueName === "") 
+    if (newKittenDataObject.valueDesc === "" || newKittenDataObject.valuePhoto === "" || newKittenDataObject.valueName === "") 
     {
         labelMessageError.innerHTML = "¡Uy! parece que has olvidado algo";
     } else 
     {
-        if (newKittenDataObject.valueDesc !== "" && newKittenDataObject.valuePhoto !== "" && newKittenDataObject.valueName !== "") {
-            labelMessageError.innerHTML = "";
+        if (newKittenDataObject.valueDesc !== "" || newKittenDataObject.valuePhoto !== "" || newKittenDataObject.valueName !== "") {
+            labelMessageError.innerHTML = "¡Mola! un nuevo gatito en Adalab";
         }
     }
     renderKittenList(kittenDataList);
+    inputDesc.value = '';
+    inputPhoto.value = '';
+    inputName.value = '';
+    inputRace.value = '';
 }
 //Cancelar la búsqueda de un gatito
 function cancelNewKitten(event) {
@@ -122,20 +124,26 @@ function cancelNewKitten(event) {
     inputPhoto.value = "";
     inputName.value = "";
 }
-
+ function prueba(kittenItem) {
+        listElement.innerHTML += renderKitten(kittenItem)
+    };
 //Filtrar por descripción
 function filterKitten(event) {
     event.preventDefault();
-    const descrSearchText = input_search_desc.value;
+    const descrSearchText = input_search_desc.value.toLowerCase();
+    const raceSearchText = input_search_race.value.toLowerCase();
     listElement.innerHTML = "";
-    for (const kittenItem of kittenDataList) {
-        if (kittenItem.desc.includes(descrSearchText)) {
-            listElement.innerHTML += renderKitten(kittenItem);
-        }
-    }
+    console.log(raceSearchText);
+   
+    const kittenItemFilter = kittenDataList
+    .filter ((kittenItem) => kittenItem.desc.toLowerCase().includes(descrSearchText))
+    .filter ((kittenItem) => kittenItem.race.toLowerCase().includes(raceSearchText))
+    // .map ((kittenItem) => listElement.innerHTML += renderKitten(kittenItem))
+    .map ((kittenItem) => prueba(kittenItem))
+    console.log(kittenItemFilter);   
 }
 
-//Mostrar el litado de gatitos en ell HTML
+//Mostrar el litado de gatitos en el HTML
 renderKittenList(kittenDataList);
 
 //Eventos
