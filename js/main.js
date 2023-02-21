@@ -17,6 +17,7 @@ const input_search_race = document.querySelector('.js_in_search_race');
 
 const GITHUB_USER = '<manuelainclan>';
 const SERVER_URL = `https://dev.adalab.es/api/kittens/${GITHUB_USER}`;
+const kittenListStored = JSON.parse(localStorage.getItem('kittensList'));
 
 //Objetos con cada gatito
 // const kittenData_1 = {
@@ -39,7 +40,13 @@ const SERVER_URL = `https://dev.adalab.es/api/kittens/${GITHUB_USER}`;
 // };
 
 let kittenDataList = [];
+if (kittenListStored) 
+{
+    renderKittenList(kittenListStored);
 
+}
+else
+{
 fetch(SERVER_URL, {
   method: 'GET',
   headers: {'Content-Type': 'application/json'},
@@ -51,9 +58,13 @@ fetch(SERVER_URL, {
         desc: kitten.desc,
         race: kitten.race,
     }) )
-    console.log(kittenDataList)
-    renderKittenList(kittenDataList)
+    console.log(kittenDataList);  
+
+    renderKittenList(kittenDataList);
+    localStorage.setItem('kittensList', JSON.stringify(kittenDataList));
 })
+
+}
 //Completa el código;
 
 //Funciones
@@ -109,7 +120,8 @@ function handleClickNewCatForm(event) {
     };
 //Adicionar nuevo gatito
 function addNewKitten(event) {
-    console.log('entro en addNewKitten');
+
+console.log('entro en addNewKitten');
     event.preventDefault();
 
     newKittenDataObject.desc = inputDesc.value;
@@ -124,8 +136,29 @@ function addNewKitten(event) {
         labelMessageError.innerHTML = "¡Uy! parece que has olvidado algo";
     } else 
     {
-        if (newKittenDataObject.valueDesc !== "" || newKittenDataObject.valuePhoto !== "" || newKittenDataObject.valueName !== "") {
+        if (newKittenDataObject.valueDesc !== "" || newKittenDataObject.valuePhoto !== "" || newKittenDataObject.valueName !== "") 
+        {
             labelMessageError.innerHTML = "¡Mola! un nuevo gatito en Adalab";
+            fetch(SERVER_URL, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(newKittenDataObject),
+            }).then((response) => response.json())
+            .then((data) => { 
+                if (data.success) {
+             newKittenDataObject = data.results.map((kitten) => ({
+                 image: kitten.valuePhoto,
+                name: kitten.valueName,
+                desc: kitten.valueDesc,
+                race: kitten.race,
+             }) )
+            localStorage.setItem('kittensList', JSON.stringify(kittenDataList));
+            }
+             else{
+
+             }
+  })
+
         }
     }
     renderKittenList(kittenDataList);
@@ -162,7 +195,7 @@ function filterKitten(event) {
 }
 
 //Mostrar el litado de gatitos en el HTML
-renderKittenList(kittenDataList);
+// renderKittenList(kittenListStored);
 
 //Eventos
 linkNewFormElememt.addEventListener("click", handleClickNewCatForm);
