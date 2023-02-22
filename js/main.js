@@ -39,6 +39,11 @@ const kittenListStored = JSON.parse(localStorage.getItem('kittensList'));
 //     race: "Maine Coon",
 // };
 
+fetch(`https://dev.adalab.es/api/kittens/${GITHUB_USER}/16770580893113622`, {
+    method: 'DELETE',
+    headers: {'Content-Type': 'application/json'},
+}).then((response) => response.json())
+
 let kittenDataList = [];
 if (kittenListStored) 
 {
@@ -69,28 +74,56 @@ fetch(SERVER_URL, {
 
 //Funciones
 function renderKitten(kittenData) {
-    const kitten = `<li class="card">
-    <article>
-      <img
-        class="card_img"
-        src=${kittenData.image}
-        alt="gatito"
-      />
-      <h3 class="card_title">${kittenData.name}</h3>
-      <h3 class="card_race">${kittenData.race}</h3>
-      <p class="card_description">
-      ${kittenData.desc}
-      </p>
-    </article>
-    </li>`;
-    return kitten;
+const liElement = document.createElement('li');
+liElement.setAttribute('class', 'card');
+const articleElement = document.createElement('article');
+const imgArticle = document.createElement('img');
+imgArticle.src = kittenData.image;
+imgArticle.setAttribute('class', 'card_img');
+imgArticle.setAttribute('alt', 'gatito');
+const nameArticle = document.createElement('h3');
+const nameContent = document.createTextNode(kittenData.name);
+nameArticle.setAttribute('class', 'card_title');
+const raceArticle = document.createElement('h3');
+const raceContent = document.createTextNode(kittenData.race);
+raceArticle.setAttribute('class', 'card_race');
+const descArticle = document.createElement('p');
+const descContent = document.createTextNode(kittenData.desc);
+descArticle.setAttribute('class', 'card_description');
+
+
+listElement.appendChild(liElement);
+liElement.appendChild(articleElement);
+articleElement.appendChild(imgArticle);
+articleElement.appendChild(nameArticle);
+nameArticle.appendChild(nameContent);
+articleElement.appendChild(raceArticle);
+raceArticle.appendChild(raceContent);
+articleElement.appendChild(descArticle);
+descArticle.appendChild(descContent);
+
+    // const kitten = `<li class="card">
+    // <article>
+    //   <img
+    //     class="card_img"
+    //     src=${kittenData.image}
+    //     alt="gatito"
+    //   />
+    //   <h3 class="card_title">${kittenData.name}</h3>
+    //   <h3 class="card_race">${kittenData.race}</h3>
+    //   <p class="card_description">
+    //   ${kittenData.desc}
+    //   </p>
+    // </article>
+    // </li>`;
+    // return kitten;
 }
 
 function renderKittenList(kittenDataList) {
     console.log(kittenDataList);
-    listElement.innerHTML = "";
+    // listElement.innerHTML = "";
     for (const kittenItem of kittenDataList) {
-        listElement.innerHTML += renderKitten(kittenItem);
+       renderKitten(kittenItem);
     }
 }
 
@@ -154,8 +187,8 @@ console.log('entro en addNewKitten');
              }) )
             localStorage.setItem('kittensList', JSON.stringify(kittenDataList));
             }
-             else{
-
+             else {
+                console.log(data);
              }
   })
 
